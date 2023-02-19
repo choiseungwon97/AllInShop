@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "order_product")
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
-public class OrderProduct {
+public class OrderProduct extends BaseEntity{
 
     @Id
     @GeneratedValue

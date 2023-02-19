@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
-public class Heart {
+public class Heart extends BaseEntity{
 
     @Id
     @GeneratedValue

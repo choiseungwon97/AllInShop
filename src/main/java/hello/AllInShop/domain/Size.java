@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
-public class Size {
+public class Size extends BaseEntity{
 
     @Id
     @GeneratedValue

@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
-public class Delivery {
+public class Delivery extends BaseEntity{
 
     @Id
     @GeneratedValue

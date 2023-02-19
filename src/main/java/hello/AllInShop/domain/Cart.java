@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
-public class Cart {
+public class Cart extends BaseEntity{
 
     @Id
     @GeneratedValue
