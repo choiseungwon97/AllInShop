@@ -35,10 +35,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "members")
+    @OneToMany(mappedBy = "member")
     private List<Cart> carts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "members")
+    @OneToMany(mappedBy = "member")
     private List<Heart> hearts = new ArrayList<>();
 
 }

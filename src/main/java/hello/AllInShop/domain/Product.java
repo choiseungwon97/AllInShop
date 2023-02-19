@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -31,4 +31,14 @@ public class Product {
     private String gender;
 
     private int price;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Size> sizes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<Heart> hearts = new ArrayList<>();
+
 }
