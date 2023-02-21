@@ -1,5 +1,9 @@
 package hello.AllInShop.repository;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import hello.AllInShop.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,12 +19,18 @@ import java.util.List;
 
 import static hello.AllInShop.domain.Gender.남성;
 import static hello.AllInShop.domain.Gender.여성;
+import static hello.AllInShop.domain.QBrand.brand;
+import static hello.AllInShop.domain.QCategory.category;
+import static hello.AllInShop.domain.QProduct.product;
 
 @SpringBootTest
+@Transactional
 class ProductRepositoryTest {
 
     @PersistenceContext
     EntityManager em;
+
+    JPAQueryFactory queryFactory;
 
     @Autowired
     private ProductRepository productRepository;
@@ -28,6 +38,35 @@ class ProductRepositoryTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private BrandRepository brandRepository;
+
+    @BeforeEach
+    public void before() {
+        queryFactory = new JPAQueryFactory(em);
+
+        Category categoryA = new Category("아우터");
+        Brand brandA = new Brand("나이키");
+
+        Category categoryB = new Category("하의");
+        Brand brandB = new Brand("아디다스");
+
+        Category cateA= categoryRepository.save(categoryA);
+        Brand brA = brandRepository.save(brandA);
+
+        Category cateB = categoryRepository.save(categoryB);
+        Brand brB = brandRepository.save(brandB);
+
+        for (int i=0; i<100; i++ ) {
+            Product productA;
+            if (i %2 ==0) {
+                productA = new Product("바람막이JPA" + i, 남성, i, i, cateA, brA);
+            } else {
+                productA = new Product("바람막이JPA" + i, 남성, i, i, cateB, brB);
+            }
+            productRepository.save(productA);
+
+        }
+
+    }
 
     @Test
     @Transactional
@@ -103,5 +142,69 @@ class ProductRepositoryTest {
         for (Product product1 : product) {
             System.out.println("product1 = " + product1);
         }
+    }
+
+    @Test
+    public void QueryDsl() {
+        Product findProduct = queryFactory
+                .select(product)
+                .from(product)
+                .where(product.name.eq("바람막이JPA5"))
+                .fetchOne();
+
+        System.out.println("findProduct = " + findProduct);
+    }
+
+    @Test
+    public void QueryDslJoin() {
+        QBrand brand = QBrand.brand;
+        QCategory category = QCategory.category;
+
+        List<Tuple> productList = queryFactory
+                .select(product, brand.brandName, category.cateName)
+                .from(product)
+                .join(product.brand, brand).fetchJoin()
+                .join(product.category, category).fetchJoin()
+                .where(brand.brandName.eq("나이키"))
+                .fetch();
+
+        for (Tuple product1 : productList) {
+            System.out.println("product1 = " + product1);
+        }
+
+    }
+
+    @Test
+    public void QueryDslDynamic() {
+        QBrand brand = QBrand.brand;
+        QCategory category = QCategory.category;
+
+        Integer stockParam = 20;
+        Integer priceParam = 20;
+
+        List<Tuple> result = searchParam(stockParam, priceParam);
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+
+
+    }
+
+    private List<Tuple> searchParam(Integer stockCond, Integer priceCond) {
+       return queryFactory
+                .select(product, brand.brandName, category.cateName)
+                .from(product)
+                .join(product.brand, brand).fetchJoin()
+                .join(product.category, category).fetchJoin()
+                .where(stockEq(stockCond), priceEq(priceCond))
+                .fetch();
+    }
+    private BooleanExpression stockEq(Integer stockCond) {
+        return stockCond != null ? product.stock.eq(stockCond) : null;
+    }
+
+    private BooleanExpression priceEq(Integer priceCond) {
+        return priceCond != null ? product.price.eq(priceCond) : null;
     }
 }
