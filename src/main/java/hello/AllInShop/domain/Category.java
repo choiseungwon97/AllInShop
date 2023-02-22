@@ -8,6 +8,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id","cateName"})
 public class Category extends BaseEntity{

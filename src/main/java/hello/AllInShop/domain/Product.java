@@ -12,7 +12,9 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString(of = {"id","name","gender","price","stock"})
 public class Product extends BaseEntity{
 
