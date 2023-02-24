@@ -11,6 +11,12 @@ public interface ProductService {
 
     PageResultDTO<ProductDTO, Product> getList(PageRequestDTO requestDTO);
 
+    ProductDTO read(Long id);
+
+    void remove(Long id);
+
+    void modify(ProductDTO dto);
+
     default Product dtoTonEntity(ProductDTO dto) {
         Product entity = Product.builder()
                 .id(dto.getId())

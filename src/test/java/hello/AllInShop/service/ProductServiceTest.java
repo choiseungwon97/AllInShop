@@ -30,9 +30,9 @@ class ProductServiceTest {
     }
 
     @Test
-    public void testList() {
+    public void testSearch() {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .page(3).size(10).build();
+                .page(3).size(10).type("g").keyword("남성").build();
 
         PageResultDTO<ProductDTO, Product> resultDTO = productService.getList(pageRequestDTO);
 
@@ -49,4 +49,6 @@ class ProductServiceTest {
         System.out.println(" ================================================ ");
         resultDTO.getPageList().forEach(i -> System.out.println("i = " + i));
     }
+
+
 }
