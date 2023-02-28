@@ -16,7 +16,7 @@ import static hello.AllInShop.domain.Gender.남성;
 @RequiredArgsConstructor
 public class InitProduct {
 
-    private final InitProductService initProductService;
+   /* private final InitProductService initProductService;
     @PostConstruct
     public void init() {
         initProductService.init();
@@ -40,5 +40,5 @@ public class InitProduct {
                 em.persist(productA);
 
             }
-        } }
+        } }*/
 }

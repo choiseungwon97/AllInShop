@@ -1,5 +1,7 @@
 package hello.AllInShop.dto;
 
+import hello.AllInShop.domain.Brand;
+import hello.AllInShop.domain.Category;
 import hello.AllInShop.domain.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +26,21 @@ public class ProductDTO {
 
     private int stock;
 
-    //private String brandName;
+    private Long memberId; //작성자 아이디
 
-    //일단보류
-    //private String cateName;
+    private String nickName; //작성자(관리자) 닉네임
 
-    private LocalDateTime regDate, modDate;
+    private Long brandId;
+
+    private String brandName;
+
+    private Long cateId;
+
+    private String cateName;
+
+    private int replyCount;
+
+    private LocalDateTime regDate;
+    private LocalDateTime modDate;
 
 }

@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Product extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private Long id;
 
@@ -31,6 +31,10 @@ public class Product extends BaseEntity{
     private int price;
 
     private int stock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -82,12 +86,24 @@ public class Product extends BaseEntity{
     }
 
     public void changeCategory(Category category) {
+        //Product에 이미 Category가 설정 되어있을 경우
+        if(this.category != null) {
+            //category 에서 해당 Entity를 제거
+            this.category.getProducts().remove(this);
+        }
+        //해당 product Entity에 파라미터로 들어온 category 연관 관계 설정
         this.category = category;
+
+        //파라미터로 들어온 category Entity에 product 연관 관계 설정
         category.getProducts().add(this);
     }
 
     public void changeBrand(Brand brand) {
+        if(this.brand != null) {
+            this.brand.getProducts().remove(this);
+        }
         this.brand = brand;
+
         brand.getProducts().add(this);
     }
 }

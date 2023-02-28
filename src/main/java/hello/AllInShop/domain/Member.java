@@ -12,12 +12,14 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = PROTECTED)
-@ToString(of = {"id","email", "nickname", "password", "grade"})
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(of = {"id","email", "nickname", "password", "grade","address" })
 public class Member extends BaseEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -31,6 +33,9 @@ public class Member extends BaseEntity{
     private Address address;
 
     private Integer grade;
+
+    @OneToMany(mappedBy = "writer")
+    private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();

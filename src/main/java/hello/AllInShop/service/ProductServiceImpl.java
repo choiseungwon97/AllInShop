@@ -2,18 +2,21 @@ package hello.AllInShop.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import hello.AllInShop.domain.Product;
-import hello.AllInShop.domain.QProduct;
+import hello.AllInShop.domain.*;
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.PageResultDTO;
 import hello.AllInShop.dto.ProductDTO;
+import hello.AllInShop.repository.BrandRepository;
+import hello.AllInShop.repository.CategoryRepository;
 import hello.AllInShop.repository.ProductRepository;
+import hello.AllInShop.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -24,6 +27,9 @@ import java.util.function.Function;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
+    private final ReplyRepository replyRepository;
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Long register(ProductDTO dto) {
@@ -41,35 +47,55 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public PageResultDTO<ProductDTO, Product> getList(PageRequestDTO requestDTO) {
-        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+    public PageResultDTO<ProductDTO, Object[]> getList(PageRequestDTO requestDTO) {
 
-        BooleanBuilder booleanBuilder = getSearch(requestDTO); // 검색 조건 추가
+        log.info(String.valueOf(requestDTO));
 
-        Page<Product> result = productRepository.findAll(booleanBuilder,pageable);
+        Function<Object[], ProductDTO> fn =
+                (en -> entityToDto(
+                        (Product)en[0],
+                        (Brand) en[1],
+                        (Category) en[2],
+                        (Member)en[3],
+                        (Long)en[4]));
 
-        Function<Product, ProductDTO> fn = (entity -> entityToDto(entity));
+        Page<Object[]> result = productRepository.getProductWithReplyCount(
+                requestDTO.getPageable(Sort.by("id").descending()));
 
         return new PageResultDTO<>(result, fn);
     }
 
     @Override
     public ProductDTO read(Long id) {
-        Optional<Product> result = productRepository.findById(id);
 
-        return result.isPresent()? entityToDto(result.get()) : null;
+        Object result = productRepository.getProductById(id);
+
+        Object[] arr = (Object[]) result;
+
+        return entityToDto(
+                (Product) arr[0],
+                (Brand) arr[1],
+                (Category) arr[2],
+                (Member) arr[3],
+                (Long) arr[4]);
     }
 
+    @Transactional //댓글 삭제와 상품삭제는 같이 이루어져야하기 때문에 트랜젝션 추가
     @Override
-    public void remove(Long id) {
+    public void removeWithReplies(Long id) {
+
+        replyRepository.deleteById(id);
         productRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void modify(ProductDTO dto) {
 
         //업데이트 하는 항목만 작성
         Optional<Product> result = productRepository.findById(dto.getId());
+        Brand updateBrand = brandRepository.findName(dto.getBrandName());
+        Category updateCategory = categoryRepository.findName(dto.getCateName());
 
         if (result.isPresent()) {
             Product entity = result.get();
@@ -78,6 +104,8 @@ public class ProductServiceImpl implements ProductService{
             entity.changeGender(dto.getGender());
             entity.changePrice(dto.getPrice());
             entity.changeStock(dto.getStock());
+            entity.changeBrand(updateBrand);
+            entity.changeCategory(updateCategory);
 
             productRepository.save(entity);
         }

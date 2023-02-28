@@ -1,5 +1,8 @@
 package hello.AllInShop.service;
 
+import hello.AllInShop.domain.Brand;
+import hello.AllInShop.domain.Category;
+import hello.AllInShop.domain.Member;
 import hello.AllInShop.domain.Product;
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.PageResultDTO;
@@ -9,33 +12,48 @@ public interface ProductService {
 
     Long register(ProductDTO dto);
 
-    PageResultDTO<ProductDTO, Product> getList(PageRequestDTO requestDTO);
+    PageResultDTO<ProductDTO, Object[]> getList(PageRequestDTO requestDTO);
 
     ProductDTO read(Long id);
 
-    void remove(Long id);
+    void removeWithReplies(Long id);
 
     void modify(ProductDTO dto);
 
     default Product dtoTonEntity(ProductDTO dto) {
+
+        Member member = Member.builder().id(dto.getMemberId()).build();
+        Brand brand = Brand.builder().id(dto.getBrandId()).build();
+        Category category = Category.builder().id(dto.getCateId()).build();
+
         Product entity = Product.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .gender(dto.getGender())
                 .price(dto.getPrice())
                 .stock(dto.getStock())
+                .writer(member)
+                .brand(brand)
+                .category(category)
                 .build();
         return entity;
     }
-    default ProductDTO entityToDto(Product entity) {
+    default ProductDTO entityToDto(Product product, Brand brand,Category category,Member member, Long replyCount) {
         ProductDTO dto = ProductDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .gender(entity.getGender())
-                .price(entity.getPrice())
-                .stock(entity.getStock())
-                .regDate(entity.getRegDate())
-                .modDate(entity.getModDate())
+                .id(product.getId())
+                .name(product.getName())
+                .gender(product.getGender())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .memberId(member.getId())
+                .nickName(member.getNickname())
+                .brandId(brand.getId())
+                .brandName(brand.getBrandName())
+                .cateId(category.getId())
+                .cateName(category.getCateName())
+                .replyCount(replyCount.intValue())
+                .regDate(product.getRegDate())
+                .modDate(product.getModDate())
                 .build();
 
         return dto;

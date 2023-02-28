@@ -92,7 +92,7 @@ public class ProductController {
         return "redirect:/product/read";
     }
 
-    @PostMapping("/remove")
+    /*@PostMapping("/remove")
     public String remove(long id, RedirectAttributes redirectAttributes) {
 
         log.info("id:" + id);
@@ -102,6 +102,6 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("msg", id);
 
         return "redirect:/product/list";
-    }
+    }*/
 
 }

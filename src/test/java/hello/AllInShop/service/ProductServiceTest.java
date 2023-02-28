@@ -1,5 +1,6 @@
 package hello.AllInShop.service;
 
+import hello.AllInShop.domain.Brand;
 import hello.AllInShop.domain.Product;
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.PageResultDTO;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static hello.AllInShop.domain.Gender.남성;
+import static hello.AllInShop.domain.Gender.여성;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -20,7 +22,7 @@ class ProductServiceTest {
     @Test
     public void testRegister() {
         ProductDTO productDTO = ProductDTO.builder()
-                .name("DtoNam")
+                .name("DtoName")
                 .gender(남성)
                 .stock(100)
                 .price(1000)
@@ -29,7 +31,7 @@ class ProductServiceTest {
         System.out.println(productService.register(productDTO));
     }
 
-    @Test
+    /*@Test
     public void testSearch() {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(3).size(10).type("g").keyword("남성").build();
@@ -48,7 +50,63 @@ class ProductServiceTest {
 
         System.out.println(" ================================================ ");
         resultDTO.getPageList().forEach(i -> System.out.println("i = " + i));
+    }*/
+
+    @Test
+    public void testResiterV2() {
+        ProductDTO productDTO = ProductDTO.builder()
+                .name("DtoName123")
+                .gender(남성)
+                .stock(100)
+                .price(1000)
+                .memberId(5L)
+                .cateId(5L)
+                .brandId(5L)
+                .build();
+
+        System.out.println(productService.register(productDTO));
     }
 
+    @Test
+    public void testList() {
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+
+        PageResultDTO<ProductDTO, Object[]> result = productService.getList(pageRequestDTO);
+
+        for (ProductDTO productDTO : result.getDtoList()) {
+            System.out.println(productDTO);
+        }
+    }
+
+    @Test
+    public void testRead() {
+        Long id = 100L;
+
+        ProductDTO productDTO = productService.read(id);
+
+        System.out.println(productDTO);
+    }
+
+    @Test
+    public void testRemove() {
+        Long id = 90L;
+
+        productService.removeWithReplies(id);
+    }
+
+    @Test
+    public void testModify() {
+        ProductDTO productDTO = ProductDTO.builder()
+                .id(100L)
+                .name("수정")
+                .gender(남성)
+                .price(2000)
+                .stock(2000)
+                .brandName("수정브랜드")
+                .cateName("수정")
+                .build();
+
+        productService.modify(productDTO);
+    }
 
 }
