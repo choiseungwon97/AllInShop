@@ -1,6 +1,7 @@
 package hello.AllInShop.repository;
 
 import hello.AllInShop.domain.Product;
+import hello.AllInShop.repository.search.SearchProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Product, Long>, QuerydslPredicateExecutor<Product> {
+public interface ProductRepository extends JpaRepository<Product, Long>, SearchProductRepository {
 
     //한개의 로우(Object) 내에 Object[]로 나옴
     @Query("select p,w from Product p left join p.writer w where p.id =:id")
@@ -20,11 +21,18 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Queryds
             "where p.id =:id")
     List<Object[]> getProductWithReply(@Param("id") Long id);
 
+    /**
+     * 상품 리스트
+     */
     @Query(value = "select p, b, c, w, count(r) from Product p left join p.writer w " +
             " left join p.brand b left join p.category c left join Reply r on r.product = p" +
             " group by p", countQuery = "select count(p) from Product p")
     Page<Object[]> getProductWithReplyCount(Pageable pageable);
 
+    /**
+     * 상품 상세보기
+     * @param id
+     */
     @Query(value = "select p, b, c, w, count(r) from Product p left join p.writer w " +
             " left join p.category c left join p.brand b" +
             " left join Reply r on r.product = p " +

@@ -129,4 +129,26 @@ public class ProductJpaRepositoryTest {
 
         System.out.println(realBrand);
     }
+
+    @Test
+    public void testCate() {
+        List<Category> all = categoryRepository.findAllByOrderByCateNameAsc();
+
+        System.out.println(all);
+    }
+    /**
+     * 검색 테스트
+     */
+    @Test
+    public void testSearch1() {
+        productRepository.search1();
+    }
+
+    @Test
+    public void testSearchPage() {
+        PageRequest pageable = PageRequest.of(0, 10, Sort.by("id").descending()
+                .and(Sort.by("name").ascending()));
+
+        Page<Object[]> result = productRepository.searchPage("n", "1", pageable);
+    }
 }

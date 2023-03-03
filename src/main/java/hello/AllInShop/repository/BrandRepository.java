@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BrandRepository extends JpaRepository<Brand, Long>, QuerydslPredicateExecutor<Brand> {
@@ -16,4 +17,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long>, QuerydslPre
 
     @Query("select b from Brand b where b.brandName =:brandName")
     Brand findName(@Param("brandName") String brandName);
+
+    List<Brand> findAllByOrderByBrandNameAsc();
 }

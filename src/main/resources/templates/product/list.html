@@ -21,7 +21,9 @@
                         <option th:selected="${pageRequestDTO.type == null}">-----</option>
                         <option value="n" th:selected="${pageRequestDTO.type == 'n'}">상품명</option>
                         <option value="g" th:selected="${pageRequestDTO.type == 'g'}">성별</option>
-                        <option value="ng" th:selected="${pageRequestDTO.type == 'ng'}">상품명 + 성별</option>
+                        <option value="b" th:selected="${pageRequestDTO.type == 'b'}">브랜드</option>
+                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">카테고리</option>
+                        <option value="ngbc" th:selected="${pageRequestDTO.type == 'ngbc'}">전체</option>
                     </select>
                 </div>
                 <input class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
@@ -39,6 +41,9 @@
                 <th scope="col">gender</th>
                 <th scope="col">price</th>
                 <th scope="col">stock</th>
+                <th scope="col">nickName</th>
+                <th scope="col">brandName</th>
+                <th scope="col">cateName</th>
                 <th scope="col">regDate</th>
                 <th scope="col">modDate</th>
             </tr>
@@ -48,11 +53,15 @@
                     <th scope="row">
                         <a th:href="@{/product/read(id = ${dto.id}, page= ${result.page},
                         type=${pageRequestDTO.type},keyword=${pageRequestDTO.keyword})}">
-                        [[${dto.id}]]</a></th>
-                    <td>[[${dto.name}]]</td>
+                        [[${dto.id}]]
+                        </a></th>
+                    <td>[[${dto.name}]] -----------------[<b th:text="${dto.replyCount}"></b>]</td>
                     <td>[[${dto.gender}]]</td>
                     <td>[[${dto.price}]]</td>
                     <td>[[${dto.stock}]]</td>
+                    <td>[[${dto.nickName}]]</td>
+                    <td>[[${dto.brandName}]]</td>
+                    <td>[[${dto.cateName}]]</td>
                     <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
                     <td>[[${#temporals.format(dto.modDate, 'yyyy/MM/dd')}]]</td>
                 </tr>

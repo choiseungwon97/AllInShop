@@ -59,7 +59,12 @@ public class ProductServiceImpl implements ProductService{
                         (Member)en[3],
                         (Long)en[4]));
 
-        Page<Object[]> result = productRepository.getProductWithReplyCount(
+        /*Page<Object[]> result = productRepository.getProductWithReplyCount(
+                requestDTO.getPageable(Sort.by("id").descending()));*/
+
+        Page<Object[]> result = productRepository.searchPage(
+                requestDTO.getType(),
+                requestDTO.getKeyword(),
                 requestDTO.getPageable(Sort.by("id").descending()));
 
         return new PageResultDTO<>(result, fn);
@@ -94,8 +99,10 @@ public class ProductServiceImpl implements ProductService{
 
         //업데이트 하는 항목만 작성
         Optional<Product> result = productRepository.findById(dto.getId());
-        Brand updateBrand = brandRepository.findName(dto.getBrandName());
-        Category updateCategory = categoryRepository.findName(dto.getCateName());
+        Brand updateBrand = brandRepository.findId(dto.getBrandId());
+        Category updateCategory = categoryRepository.findId(dto.getCateId());
+
+
 
         if (result.isPresent()) {
             Product entity = result.get();

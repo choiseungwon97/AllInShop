@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CategoryRepository extends JpaRepository<Category, Long>, QuerydslPredicateExecutor<Category> {
 
     @Query("select c from Category c where c.id =:id")
@@ -13,4 +15,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Query
 
     @Query("select c from Category c where c.cateName =:cateName")
     Category findName(@Param("cateName") String cateName);
+
+    List<Category> findAllByOrderByCateNameAsc();
 }

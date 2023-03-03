@@ -2,6 +2,8 @@ package hello.AllInShop.controller;
 
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.ProductDTO;
+import hello.AllInShop.repository.BrandRepository;
+import hello.AllInShop.repository.CategoryRepository;
 import hello.AllInShop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
 
     @GetMapping("/")
     public String index() {
@@ -38,6 +42,8 @@ public class ProductController {
     public String register(Model model) {
         log.info("register get .........................");
         model.addAttribute("dto", new ProductDTO());
+        model.addAttribute("categories", categoryRepository.findAllByOrderByCateNameAsc());
+        model.addAttribute("brands", brandRepository.findAllByOrderByBrandNameAsc());
         return "/product/register";
     }
 
@@ -70,6 +76,8 @@ public class ProductController {
         log.info("id: " + id);
 
         ProductDTO dto = productService.read(id);
+        model.addAttribute("categories", categoryRepository.findAllByOrderByCateNameAsc());
+        model.addAttribute("brands", brandRepository.findAllByOrderByBrandNameAsc());
 
         model.addAttribute("dto", dto);
 
@@ -92,16 +100,16 @@ public class ProductController {
         return "redirect:/product/read";
     }
 
-    /*@PostMapping("/remove")
+    @PostMapping("/remove")
     public String remove(long id, RedirectAttributes redirectAttributes) {
 
         log.info("id:" + id);
 
-        productService.remove(id);
+        productService.removeWithReplies(id);
 
         redirectAttributes.addFlashAttribute("msg", id);
 
         return "redirect:/product/list";
-    }*/
+    }
 
 }

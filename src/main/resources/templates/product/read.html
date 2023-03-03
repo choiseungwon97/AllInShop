@@ -15,6 +15,14 @@
             <input type="text" class="form-control" th:field="${dto.name}" readonly>
         </div>
         <div class="form-group">
+            <label>카테고리</label>
+            <input type="text" class="form-control" th:field="${dto.brandName}" readonly>
+        </div>
+        <div class="form-group">
+            <label>브랜드</label>
+            <input type="text" class="form-control" th:field="${dto.cateName}" readonly>
+        </div>
+        <div class="form-group">
             <label>성별</label>
                 <input type="text" class="form-control" th:field="${dto.gender}" readonly>
         </div>
@@ -25,6 +33,10 @@
         <div class="form-group">
             <label>수량</label>
             <input type="text" class="form-control" th:field="${dto.stock}" readonly>
+        </div>
+        <div class="form-group">
+            <label>작성자</label>
+            <input type="text" class="form-control" th:field="${dto.nickName}" readonly>
         </div>
 
         <div class="form-group">
