@@ -38,6 +38,16 @@ public class ReplyController {
         return new ResponseEntity<>(id,HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> modify (@RequestBody ReplyDTO replyDTO) {
+
+        log.info(String.valueOf(replyDTO));
+
+        replyService.modify(replyDTO);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> remove(@PathVariable("id") Long id) {
 

@@ -18,4 +18,9 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Modifying
     @Query("delete from Reply r where r.product.id =:id")
     void deleteById(@Param("id") Long id);
+
+    //댓글 한개 삭제
+    @Modifying
+    @Query("delete from Reply r where r.id =:id")
+    void deleteOneById(@Param("id") Long id);
 }

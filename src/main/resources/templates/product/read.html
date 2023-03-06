@@ -85,6 +85,7 @@
                             <input class="form-control" type="text" name="replyer" placeholder="작성자">
                             <input type="hidden" name="id">
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger replyRemove">삭제</button>
@@ -125,7 +126,7 @@
 
                         $.each(arr, function (idx, reply) {
                             console.log(reply);
-                            str += ' <div class="card-body data-id="'+reply.id+'"><b>'+reply.id+'</b>';
+                            str += ' <div class="card-body data-id="'+reply.id+'" id="'+reply.id+'"><b>'+reply.id+'</b>';
                             str += ' <h5 class="card-title">'+reply.text+'</h5>';
                             str += ' <h6 class="card-subtitle mb-2 text-muted">'+reply.replyer+'</h6>';
                             str += ' <p class="card-text">'+formatTime(reply.regDate)+'</p>';
@@ -183,8 +184,9 @@
                 });
 
                 $('.replyList').on("click", ".card-body", function (){
-                    var id = $(this).data("id")
-
+                    //var id = $(this).data("id");
+                    var id = $(this).attr('id');
+                    console.log(""+id);
                     $("input[name='replyText']").val($(this).find('.card-title').html());
                     $("input[name='replyer']").val($(this).find('.card-subtitle').html());
                     $("input[name='id']").val(id);
@@ -197,7 +199,8 @@
 
                 $(".replyRemove").click(function () {
 
-                    var id = $("input[name='id']").val(id); //모달창에 보이는 댓글 번호(히든처리함)
+                    var id = $("input[name='id']").val(); //모달창에 보이는 댓글 번호(히든처리함)
+                    console.log(id);
 
                     $.ajax({
                         url: '/replies/' + id,
@@ -207,6 +210,36 @@
                             console.log("result:" + result);
                             if (result === 'success') {
                                 alert("댓글이 삭제되었습니다.")
+                                modal.modal('hide');
+                                loadJSONData();
+                            }
+                        }
+                    })
+                });
+
+                $(".replyModify").click(function () {
+
+                    var id = $("input[name='id']").val(); //모달창에 보이는 댓글 번호(히든처리함)
+                    console.log(id);
+
+                    var reply = {
+                        id: id,
+                        productId: [[${dto.id}]],
+                        text: $('input[name="replyText"]').val(),
+                        replyer: $('input[name="replyer"]').val()
+                    }
+
+                    console.log(reply)
+                    $.ajax({
+                        url: '/replies/' + id,
+                        method: 'put',
+                        data: JSON.stringify(reply),
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (result) {
+                            console.log("result:" + result);
+                            if (result === 'success') {
+                                alert("댓글이 수정되었습니다.")
                                 modal.modal('hide');
                                 loadJSONData();
                             }
