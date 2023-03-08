@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -42,5 +44,8 @@ public class ProductDTO {
 
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    @Builder.Default
+    private List<ProductImageDTO> imageDTOList = new ArrayList<>();
 
 }

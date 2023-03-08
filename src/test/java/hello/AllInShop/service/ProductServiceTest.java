@@ -98,11 +98,11 @@ class ProductServiceTest {
     public void testModify() {
         ProductDTO productDTO = ProductDTO.builder()
                 .id(100L)
-                .name("수정")
+                .name("수정kkk")
                 .gender(남성)
                 .price(2000)
                 .stock(2000)
-                .brandName("수정브랜드")
+                .brandName("수정브랜드kkk")
                 .cateName("수정")
                 .build();
 

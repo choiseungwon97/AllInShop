@@ -6,10 +6,7 @@ import hello.AllInShop.domain.*;
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.PageResultDTO;
 import hello.AllInShop.dto.ProductDTO;
-import hello.AllInShop.repository.BrandRepository;
-import hello.AllInShop.repository.CategoryRepository;
-import hello.AllInShop.repository.ProductRepository;
-import hello.AllInShop.repository.ReplyRepository;
+import hello.AllInShop.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -30,20 +29,25 @@ public class ProductServiceImpl implements ProductService{
     private final ReplyRepository replyRepository;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductImgRepository productImgRepository;
 
+    @Transactional
     @Override
     public Long register(ProductDTO dto) {
 
         log.info("DTO..................................");
         log.info(String.valueOf(dto));
 
-        Product entity = dtoTonEntity(dto);
+        Map<String, Object> entityMap = dtoTonEntity(dto);
+        Product product = (Product) entityMap.get("product");
+        List<ProductImage> productImageList = (List<ProductImage>) entityMap.get("imgList");
 
-        log.info(String.valueOf(entity));
+        productRepository.save(product);
 
-        productRepository.save(entity);
-
-        return entity.getId();
+        productImageList.forEach(productImage -> {
+            productImgRepository.save(productImage);
+        });
+        return product.getId();
     }
 
     @Override
