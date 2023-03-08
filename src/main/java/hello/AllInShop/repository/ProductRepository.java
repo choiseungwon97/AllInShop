@@ -43,5 +43,19 @@ public interface ProductRepository extends JpaRepository<Product, Long>, SearchP
             " left join p.brand b where p.id =:id")
     Object getProductWithWriterBrandCate(@Param("id") Long id);
 
+    /**
+     * 상품 리뷰 , 이미지, 별점이 포함 된 페이징
+     */
+    @Query("select p, pi, avg(coalesce(r.grade,0)), count(distinct r) from Product p " +
+            "left outer join ProductImage pi on pi.product = p " +
+            "left outer join Review r on r.product = p group by p")
+    Page<Object[]> getListPage(Pageable pageable);
 
+    /**
+     * 특정 영화의 모든 이미지와 평균 평점/리뷰 개수
+     */
+    @Query("select p, pi, avg(coalesce(r.grade,0)), count(r) from Product p left outer join ProductImage pi on pi.product = p " +
+            "left outer join Review r on r.product = p " +
+            "where p.id = :id")
+    List<Object[]> getProductWithAll(@Param("id") Long id);
 }

@@ -5,6 +5,8 @@ import hello.AllInShop.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
@@ -13,7 +15,12 @@ public class MemberJpaRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
+    /**
+     * member 테스트 데이터 생성
+     */
     @Test
     public void insertMembers() {
         IntStream.rangeClosed(1,100).forEach(i -> {
@@ -27,5 +34,21 @@ public class MemberJpaRepositoryTest {
 
             memberRepository.save(member);
         });
+    }
+
+    /**
+     * member 삭제 시 리뷰 삭제
+     */
+    @Transactional
+    @Commit
+    @Test
+    public void testDeleteMember() {
+
+        Long id = 2L;
+
+        Member member = Member.builder().id(id).build();
+
+        reviewRepository.deleteByMember(member);
+        memberRepository.deleteById(id);
     }
 }

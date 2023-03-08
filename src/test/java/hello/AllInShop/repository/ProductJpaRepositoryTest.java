@@ -8,11 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -26,9 +28,13 @@ public class ProductJpaRepositoryTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private BrandRepository brandRepository;
+    @Autowired
+    private ProductImgRepository productImgRepository;
 
 
     @Test
+    @Transactional
+    @Commit
     public void insertProduct() {
 
         IntStream.rangeClosed(1,100).forEach(i -> {
@@ -59,6 +65,16 @@ public class ProductJpaRepositoryTest {
                     .build();
 
             productRepository.save(product);
+
+            int count = (int) (Math.random() * 5) + 1; //1,2,3,4
+
+            for (int j = 0; j < count; j++) {
+                ProductImage productImage = ProductImage.builder()
+                        .uuid(UUID.randomUUID().toString())
+                        .product(product)
+                        .imgName("test" + j + ".jpg").build();
+                productImgRepository.save(productImage);
+            }
         });
 
     }
@@ -151,4 +167,33 @@ public class ProductJpaRepositoryTest {
 
         Page<Object[]> result = productRepository.searchPage("n", "1", pageable);
     }
+
+    /**
+     * 상품 리뷰 페이지 리스트 테스트
+     */
+    @Test
+    public void testListPage() {
+        PageRequest pageRequest = PageRequest.of(0,10,Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<Object[]> result = productRepository.getListPage(pageRequest);
+
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    /**
+     * 특정 영화의 모든 이미지와 평균 평점/리뷰 개수
+     */
+    @Test
+    public void testGetProductWithAll() {
+        List<Object[]> result = productRepository.getProductWithAll(94L);
+
+        System.out.println(result);
+
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
 }
