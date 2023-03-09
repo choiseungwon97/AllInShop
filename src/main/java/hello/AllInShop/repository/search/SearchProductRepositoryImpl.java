@@ -22,7 +22,9 @@ import static hello.AllInShop.domain.QBrand.*;
 import static hello.AllInShop.domain.QCategory.*;
 import static hello.AllInShop.domain.QMember.*;
 import static hello.AllInShop.domain.QProduct.product;
+import static hello.AllInShop.domain.QProductImage.productImage;
 import static hello.AllInShop.domain.QReply.*;
+import static hello.AllInShop.domain.QReview.review;
 
 @Slf4j
 public class SearchProductRepositoryImpl extends QuerydslRepositorySupport implements SearchProductRepository{
@@ -42,6 +44,8 @@ public class SearchProductRepositoryImpl extends QuerydslRepositorySupport imple
         QMember member = QMember.member;
         QCategory category = QCategory.category;
         QBrand brand = QBrand.brand;
+        QReview review = QReview.review;
+        QProductImage productImage = QProductImage.productImage;
 
         JPQLQuery<Product> jpqlQuery = from(product);
         jpqlQuery.leftJoin(brand).on(product.brand.eq(brand));
@@ -70,9 +74,10 @@ public class SearchProductRepositoryImpl extends QuerydslRepositorySupport imple
         jpqlQuery.leftJoin(brand).on(product.brand.eq(brand));
         jpqlQuery.leftJoin(category).on(product.category.eq(category));
         jpqlQuery.leftJoin(member).on(product.writer.eq(member));
-        jpqlQuery.leftJoin(reply).on(reply.product.eq(product));
+        jpqlQuery.leftJoin(productImage).on(productImage.product.eq(product));
+        jpqlQuery.leftJoin(review).on(review.product.eq(product));
 
-        JPQLQuery<Tuple> tuple = jpqlQuery.select(product, brand, category, member, reply.count());
+        JPQLQuery<Tuple> tuple = jpqlQuery.select(product, brand, category, member, productImage,(review.grade.coalesce(0)).avg(), review.countDistinct());
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         BooleanExpression expression = product.id.gt(0L);

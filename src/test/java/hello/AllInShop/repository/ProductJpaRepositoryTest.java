@@ -187,7 +187,7 @@ public class ProductJpaRepositoryTest {
      */
     @Test
     public void testGetProductWithAll() {
-        List<Object[]> result = productRepository.getProductWithAll(94L);
+        List<Object[]> result = productRepository.getProductWithAll(105L);
 
         System.out.println(result);
 

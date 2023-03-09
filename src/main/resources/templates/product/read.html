@@ -40,6 +40,16 @@
         </div>
 
         <div class="form-group">
+            <label>리뷰갯수</label>
+            <input type="text" class="form-control" th:field="${dto.reviewCnt}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>평균별점</label>
+            <input type="text" class="form-control" th:field="${dto.avg}" readonly>
+        </div>
+
+        <div class="form-group">
             <label>등록일</label>
             <input type="text" class="form-control" th:field="${dto.regDate}"
             th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
@@ -51,6 +61,18 @@
                    th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
         </div>
 
+        <div class="uploadResult">
+            <ul>
+                <li th:each="productImage: ${dto.imageDTOList}">
+                    <img th:if="${productImage.path != null}" th:src="|/display?fileName=${productImage.getThumbnailURL()}|">
+                </li>
+            </ul>
+        </div>
+
+        <button type="button" class="btn btn-primary">
+            리뷰 개수 <span class="badge badge-light">[[${dto.reviewCnt}]]</span>
+        </button>
+
         <a th:href="@{/product/modify(id = ${dto.id}, page=${requestDTO.page},
         type=${requestDTO.type},keyword=${requestDTO.keyword})}">
             <button type="button" class="btn btn-primary">수정</button>
@@ -60,12 +82,12 @@
             <button type="button" class="btn btn-info">목록</button>
         </a>
 
-        <div class="mt-4">
+        <!--<div class="mt-4">
             <h5><span class="badge badge-info addReply">댓글 등록</span> </h5>
             <h5><span class="badge badge-secondary replyCount">댓글 [[${dto.replyCount}]]</span> </h5>
         </div>
         <div class="list-group replyList">
-        </div>
+        </div>-->
 
 
         <div class="modal" tabindex="-1" role="dialog">

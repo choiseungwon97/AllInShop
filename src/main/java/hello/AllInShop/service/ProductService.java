@@ -65,7 +65,9 @@ public interface ProductService {
 
         return entityMap;
     }
-    default ProductDTO entityToDto(Product product, Brand brand,Category category,Member member, Long replyCount) {
+    default ProductDTO entityToDto(Product product, Brand brand,Category category,
+                                   Member member, List<ProductImage> productImages,
+                                   Double avg, Long reviewCnt) {
         ProductDTO dto = ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -78,10 +80,21 @@ public interface ProductService {
                 .brandName(brand.getBrandName())
                 .cateId(category.getId())
                 .cateName(category.getCateName())
-                .replyCount(replyCount.intValue())
                 .regDate(product.getRegDate())
                 .modDate(product.getModDate())
                 .build();
+
+        List<ProductImageDTO> productImageDTOList = productImages.stream().
+                map(productImage -> {
+                    return ProductImageDTO.builder().imgName(productImage.getImgName())
+                            .path(productImage.getPath())
+                            .uuid(productImage.getUuid())
+                            .build();
+        }).collect(Collectors.toList());
+
+        dto.setImageDTOList(productImageDTOList);
+        dto.setAvg(avg);
+        dto.setReviewCnt(reviewCnt.intValue());
 
         return dto;
     }

@@ -15,9 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -55,21 +53,31 @@ public class ProductServiceImpl implements ProductService{
 
         log.info(String.valueOf(requestDTO));
 
+
+
         Function<Object[], ProductDTO> fn =
                 (en -> entityToDto(
                         (Product)en[0],
                         (Brand) en[1],
                         (Category) en[2],
                         (Member)en[3],
-                        (Long)en[4]));
+                        (List<ProductImage>) (Arrays.asList((ProductImage)en[4])),
+                        (Double) en[5],
+                        (Long) en[6]
+                        ));
 
-        /*Page<Object[]> result = productRepository.getProductWithReplyCount(
-                requestDTO.getPageable(Sort.by("id").descending()));*/
 
+        //검색 처리전
+        /*Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+        Page<Object[]> result = productRepository.getListPage(pageable);*/
+
+        //검색처리 후
         Page<Object[]> result = productRepository.searchPage(
                 requestDTO.getType(),
                 requestDTO.getKeyword(),
                 requestDTO.getPageable(Sort.by("id").descending()));
+
+
 
         return new PageResultDTO<>(result, fn);
     }
@@ -77,16 +85,28 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDTO read(Long id) {
 
-        Object result = productRepository.getProductById(id);
+        List<Object[]> result = productRepository.getProductWithAll(id);
 
-        Object[] arr = (Object[]) result;
+        Product product = (Product) result.get(0)[0]; //product 엔티티는 가장 앞에 존재 - 모든 row가 동일한 값
 
-        return entityToDto(
-                (Product) arr[0],
-                (Brand) arr[1],
-                (Category) arr[2],
-                (Member) arr[3],
-                (Long) arr[4]);
+        Brand brand = (Brand) result.get(0)[1];
+
+        Category category = (Category) result.get(0)[2];
+
+        Member member = (Member) result.get(0)[3];
+
+        List<ProductImage> productImageList = new ArrayList<>(); //상품의 이미지 개수만큼 productImage객체 필요
+
+        result.forEach(arr -> {
+            ProductImage productImage = (ProductImage) arr[4];
+            productImageList.add(productImage);
+        });
+
+        Double avg = (Double) result.get(0)[5];
+
+        Long reviewCnt = (Long) result.get(0)[6];
+
+        return entityToDto(product, brand, category,member,productImageList,avg,reviewCnt);
     }
 
     @Transactional //댓글 삭제와 상품삭제는 같이 이루어져야하기 때문에 트랜젝션 추가

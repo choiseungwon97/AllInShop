@@ -48,4 +48,9 @@ public class ProductDTO {
     @Builder.Default
     private List<ProductImageDTO> imageDTOList = new ArrayList<>();
 
+    private double avg;
+
+    private int reviewCnt;
+
+
 }

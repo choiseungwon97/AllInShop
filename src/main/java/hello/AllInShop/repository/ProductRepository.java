@@ -44,18 +44,28 @@ public interface ProductRepository extends JpaRepository<Product, Long>, SearchP
     Object getProductWithWriterBrandCate(@Param("id") Long id);
 
     /**
-     * 상품 리뷰 , 이미지, 별점이 포함 된 페이징
+     * 상품 리뷰 , 이미지, 별점이 포함 된 페이징(list)
      */
-    @Query("select p, pi, avg(coalesce(r.grade,0)), count(distinct r) from Product p " +
+    /*@Query("select p, pi, avg(coalesce(r.grade,0)), count(distinct r) from Product p " +
             "left outer join ProductImage pi on pi.product = p " +
             "left outer join Review r on r.product = p group by p")
     Page<Object[]> getListPage(Pageable pageable);
+*/
+    @Query("select p, b, c, w, pi, avg(coalesce(r.grade,0)), count(distinct r) from Product p " +
+            "left join p.writer w left join p.brand b left join p.category c " +
+            "left outer join ProductImage pi on pi.product = p " +
+            "left outer join Review r on r.product = p " +
+            "group by p")
+    Page<Object[]> getListPage(Pageable pageable);
 
     /**
-     * 특정 영화의 모든 이미지와 평균 평점/리뷰 개수
+     * 특정 영화의 모든 이미지와 평균 평점/리뷰 개수 (read)
      */
-    @Query("select p, pi, avg(coalesce(r.grade,0)), count(r) from Product p left outer join ProductImage pi on pi.product = p " +
+    @Query("select p, b, c, w, pi, avg(coalesce(r.grade,0)), count(r) from Product p " +
+            "left join p.writer w left join p.brand b left join p.category c " +
+            "left outer join ProductImage pi on pi.product = p " +
             "left outer join Review r on r.product = p " +
-            "where p.id = :id")
+            "where p.id = :id group by pi")
     List<Object[]> getProductWithAll(@Param("id") Long id);
+
 }

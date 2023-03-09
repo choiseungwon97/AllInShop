@@ -44,6 +44,8 @@
                 <th scope="col">nickName</th>
                 <th scope="col">brandName</th>
                 <th scope="col">cateName</th>
+                <th scope="col">리뷰 갯수</th>
+                <th scope="col">평균 평점</th>
                 <th scope="col">regDate</th>
                 <th scope="col">modDate</th>
             </tr>
@@ -55,13 +57,16 @@
                         type=${pageRequestDTO.type},keyword=${pageRequestDTO.keyword})}">
                         [[${dto.id}]]
                         </a></th>
-                    <td>[[${dto.name}]] -----------------[<b th:text="${dto.replyCount}"></b>]</td>
+                    <td><img th:if="${dto.imageDTOList.size() > 0 && dto.imageDTOList[0].path != null}" th:src="|/display?fileName=${dto.imageDTOList[0].getThumbnailURL()}|">
+                        [[${dto.name}]]</td>
                     <td>[[${dto.gender}]]</td>
                     <td>[[${dto.price}]]</td>
                     <td>[[${dto.stock}]]</td>
                     <td>[[${dto.nickName}]]</td>
                     <td>[[${dto.brandName}]]</td>
                     <td>[[${dto.cateName}]]</td>
+                    <td>[[${dto.reviewCnt}]]</td>
+                    <td>[[${dto.avg}]]</td>
                     <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
                     <td>[[${#temporals.format(dto.modDate, 'yyyy/MM/dd')}]]</td>
                 </tr>
