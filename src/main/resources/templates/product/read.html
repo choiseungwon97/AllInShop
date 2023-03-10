@@ -73,6 +73,10 @@
             리뷰 개수 <span class="badge badge-light">[[${dto.reviewCnt}]]</span>
         </button>
 
+        <button type="button" class="btn btn-info addReviewBtn">
+            리뷰 등록
+        </button>
+
         <a th:href="@{/product/modify(id = ${dto.id}, page=${requestDTO.page},
         type=${requestDTO.type},keyword=${requestDTO.keyword})}">
             <button type="button" class="btn btn-primary">수정</button>
@@ -82,6 +86,10 @@
             <button type="button" class="btn btn-info">목록</button>
         </a>
 
+        <div class="list-group reviewList">
+
+        </div>
+
         <!--<div class="mt-4">
             <h5><span class="badge badge-info addReply">댓글 등록</span> </h5>
             <h5><span class="badge badge-secondary replyCount">댓글 [[${dto.replyCount}]]</span> </h5>
@@ -90,30 +98,55 @@
         </div>-->
 
 
-        <div class="modal" tabindex="-1" role="dialog">
+        <!--리뷰 모달-->
+        <div class="reviewModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">댓글</h5>
+                        <h5 class="modal-title">리뷰</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input class="form-control" type="text" name="replyText" placeholder="댓글내용을입력해주세요">
+                            <label>작성자</label>
+                            <input class="form-control" type="text" name="mid">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" type="text" name="replyer" placeholder="작성자">
-                            <input type="hidden" name="id">
+                            <label>평점<span class="grade"></span> </label>
+                            <div class='starrr'></div>
                         </div>
+                        <div class="form-group">
+                            <label>리뷰 작성</label>
+                            <input class="form-control" type="text" name="text" placeholder="리뷰를 작성해주세요">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger removeBtn">삭제</button>
+                        <button type="button" class="btn btn-warning modifyBtn">수정</button>
+                        <button type="button" class="btn btn-primary reviewSaveBtn">저장</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--이미지 모달-->
+        <div class="imageModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">사진</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger replyRemove">삭제</button>
-                        <button type="button" class="btn btn-warning replyModify">수정</button>
-                        <button type="button" class="btn btn-primary replySave">저장</button>
-                        <button type="button" class="btn btn-outline-secondary replyClose" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -269,6 +302,81 @@
                     })
                 });
 
+                /*리뷰 모달*/
+                var grade = 0;
+                var pid = id;
+
+                $('.starrr').starrr({
+                    rating: grade,
+                    change: function (e, value) {
+                        if (value) {
+                            console.log(value);
+                            grade = value;
+                        }
+                    }
+                });
+                var reviewModal = $(".reviewModal");
+                var inputMid = $('input[name="mid"]');
+                var inputText = $('input[name="text"]');
+
+                $(".addReviewBtn").click(function () {
+                    inputMid.val("");
+                    inputText.val("");
+
+                    $(".removeBtn, .modifyBtn").hide();
+                    $(".reviewSaveBtn").show();
+
+                    reviewModal.modal('show');
+                });
+
+                $('.reviewSaveBtn').click(function () {
+
+                    var data = {pid:pid, grade:grade, text:inputText.val(), mid: inputMid.val()};
+
+                    $.ajax({
+                        url: '/reviews/' + pid,
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        contentType:"application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function (result) {
+
+                            console.log("Result :" + result);
+
+                            self.location.reload();
+                        }
+                    })
+                    reviewModal.modal('hide');
+                })
+
+                //페이지가 열리면 바로 리뷰데이터 들을 가져와서 사용한다. reviewList
+                function getProductReviews() {
+                    function formatTime(str) {
+                        var date = new Date(str);
+
+                        return date.getFullYear() + '/' +
+                            (date.getMonth()+1) + '/' +
+                            date.getDate() + ' ' +
+                            date.getHours() + ':' +
+                            date.getMinutes();
+                    }
+                    $.getJSON("/reviews/"+pid+"/all", function (arr) {
+                        var str ="";
+
+                        $.each(arr, function (idx, review) {
+
+                            console.log(review);
+
+                            str += ' <div class="card-body" data-reviewId='+review.reviewId+' data-mid='+review.pid+'>';
+                            str += ' <h5 class="card-title">'+review.text+'</h5>';
+                            str += ' <h6 class="card-subtitle mb-2 text-muted">'+review.nickname+'</h6>';
+                            str += ' <p class="card-text">'+formatTime(review.regDate)+'</p>';
+                            str += '</div>';
+                        });
+                        $(".reviewList").html(str);
+                    });
+                }
+                getProductReviews();
             });
         </script>
     </th:block>
