@@ -45,6 +45,8 @@ public interface ReviewService {
                 .email(productReview.getMember().getEmail())
                 .grade(productReview.getGrade())
                 .text(productReview.getText())
+                .regDate(productReview.getRegDate())
+                .modDate(productReview.getModDate())
                 .build();
 
         return productReviewDTO;
