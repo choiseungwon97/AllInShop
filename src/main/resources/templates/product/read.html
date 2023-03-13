@@ -63,7 +63,7 @@
 
         <div class="uploadResult">
             <ul>
-                <li th:each="productImage: ${dto.imageDTOList}">
+                <li th:each="productImage: ${dto.imageDTOList}" th:data-file="${productImage.getThumbnailURL()}">
                     <img th:if="${productImage.path != null}" th:src="|/display?fileName=${productImage.getThumbnailURL()}|">
                 </li>
             </ul>
@@ -307,6 +307,18 @@
                     })
                     reviewModal.modal('hide');
                 });
+
+                //섬네일 제공
+                $(".uploadResult li").click(function () {
+
+                    var file = $(this).data('file');
+
+                    console.log(file);
+
+                    $('.imageModal .modal-body').html("<img style='width:100%' src='/display?fileName="+file+"&size=1'>")
+                    $(".imageModal").modal("show");
+                });
+
             });
         </script>
     </th:block>
