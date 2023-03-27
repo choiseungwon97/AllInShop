@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService{
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImgRepository productImgRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     @Override
@@ -113,7 +114,8 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void removeWithReplies(Long id) {
 
-        replyRepository.deleteById(id);
+        reviewRepository.deleteByProductId(id);
+        productImgRepository.deleteByProductId(id);
         productRepository.deleteById(id);
     }
 
@@ -122,10 +124,11 @@ public class ProductServiceImpl implements ProductService{
     public void modify(ProductDTO dto) {
 
         //업데이트 하는 항목만 작성
+        Map<String, Object> entityMap = dtoTonEntity(dto);
+        List<ProductImage> productImageList = (List<ProductImage>) entityMap.get("imgList");
         Optional<Product> result = productRepository.findById(dto.getId());
         Brand updateBrand = brandRepository.findId(dto.getBrandId());
         Category updateCategory = categoryRepository.findId(dto.getCateId());
-
 
 
         if (result.isPresent()) {
@@ -140,6 +143,10 @@ public class ProductServiceImpl implements ProductService{
 
             productRepository.save(entity);
         }
+
+        productImageList.forEach(productImage -> {
+            productImgRepository.save(productImage);
+        });
     }
 
     private BooleanBuilder getSearch(PageRequestDTO requestDTO) {

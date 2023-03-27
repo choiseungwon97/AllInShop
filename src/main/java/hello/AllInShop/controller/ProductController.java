@@ -4,15 +4,15 @@ import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.ProductDTO;
 import hello.AllInShop.repository.BrandRepository;
 import hello.AllInShop.repository.CategoryRepository;
+import hello.AllInShop.repository.ProductImgRepository;
 import hello.AllInShop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -24,6 +24,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final ProductImgRepository productImgRepository;
 
     @GetMapping("/")
     public String index() {
@@ -110,6 +111,22 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("msg", id);
 
         return "redirect:/product/list";
+    }
+
+    /**
+     * 상품 기존 이미지 삭제
+     * @param uuid
+     * @return
+     */
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<String> removeProductImg(@PathVariable String uuid) {
+
+        log.info("================delete Product Img 단건 =====================");
+        log.info("uuid: " + uuid);
+
+        productImgRepository.deleteByUuid(uuid);
+
+        return new ResponseEntity<>(uuid, HttpStatus.OK);
     }
 
 }

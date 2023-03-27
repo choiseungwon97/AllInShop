@@ -50,6 +50,12 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product")
     private List<Heart> hearts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> productImages = new ArrayList<>();
+
     public Product(String name, Gender gender, int price, int stock) {
         this.name = name;
         this.gender = gender;
@@ -106,4 +112,6 @@ public class Product extends BaseEntity{
 
         brand.getProducts().add(this);
     }
+
+
 }

@@ -1,17 +1,16 @@
 package hello.AllInShop.service;
 
-import hello.AllInShop.domain.Brand;
-import hello.AllInShop.domain.Product;
+
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.PageResultDTO;
 import hello.AllInShop.dto.ProductDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static hello.AllInShop.domain.Gender.남성;
-import static hello.AllInShop.domain.Gender.여성;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 class ProductServiceTest {
@@ -87,9 +86,12 @@ class ProductServiceTest {
         System.out.println(productDTO);
     }
 
+    /**
+     * 상품 삭제 로직
+     */
     @Test
     public void testRemove() {
-        Long id = 90L;
+        Long id = 108L;
 
         productService.removeWithReplies(id);
     }
