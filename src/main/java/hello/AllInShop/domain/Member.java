@@ -5,8 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -15,7 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(of = {"id","email", "nickname", "password", "grade","address" })
+@ToString(exclude = {"products", "orders","carts","hearts"})
 public class Member extends BaseEntity{
 
     @Id
@@ -32,7 +31,13 @@ public class Member extends BaseEntity{
     @Embedded
     private Address address;
 
-    private Integer grade;
+    //grade추가 (인증할 때 collection 타입으로 받아와야해서 hashSet으로 만듦)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<Grade> gradeSet = new HashSet<>();
+
+
+    private boolean fromSocial;
 
     @OneToMany(mappedBy = "writer")
     private List<Product> products = new ArrayList<>();
@@ -51,11 +56,16 @@ public class Member extends BaseEntity{
         this.nickname = nickname;
         this.password = password;
         this.address = address;
-        if (grade == null) {
+        /*if (grade == null) {
             this.grade = 0;
         } else {
             this.grade = grade;
-        }
+        }*/
+    }
+
+
+   public void addMemberGrade(Grade grade) {
+        gradeSet.add(grade);
     }
 
     public void UpdateNickname(String nickname) {

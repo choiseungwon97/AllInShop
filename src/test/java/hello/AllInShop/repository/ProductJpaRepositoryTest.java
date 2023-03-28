@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class ProductJpaRepositoryTest {
     private BrandRepository brandRepository;
     @Autowired
     private ProductImgRepository productImgRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Test
@@ -40,11 +43,13 @@ public class ProductJpaRepositoryTest {
         IntStream.rangeClosed(1,100).forEach(i -> {
             Member member = Member.builder()
                     .email("user"+i +"@aaa.com")
-                    .password("1111")
+                    .password(passwordEncoder.encode("1111"))
                     .nickname("USER"+i)
                     .address(new Address("서울시","경수대로",111))
+                    .fromSocial(false)
                     .build();
 
+            member.addMemberGrade(Grade.USER);
 
             Category category = Category.builder().cateName("아우터").build();
 
@@ -77,6 +82,15 @@ public class ProductJpaRepositoryTest {
             }
         });
 
+        Member admin = Member.builder()
+                .email("admin@aaa.com")
+                .password(passwordEncoder.encode("1111"))
+                .nickname("admin")
+                .address(new Address("서울시","경수대로",111))
+                .build();
+
+        admin.addMemberGrade(Grade.ADMIN);
+        memberRepository.save(admin);
     }
 
     @Test
@@ -196,4 +210,15 @@ public class ProductJpaRepositoryTest {
         }
     }
 
+    /**
+     * 이메일과 소셜로 추가된 회원 read 테스트
+     */
+    @Test
+    public void testRead() {
+        Optional<Member> result = memberRepository.findByEmail("admin@aaa.com", false);
+
+        Member member = result.get();
+
+        System.out.println("member = " + member);
+    }
 }
