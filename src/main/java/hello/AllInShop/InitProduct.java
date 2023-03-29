@@ -1,6 +1,8 @@
 package hello.AllInShop;
 
 import hello.AllInShop.domain.Product;
+import hello.AllInShop.domain.ProductImage;
+import hello.AllInShop.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -9,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.List;
+import java.util.Map;
 
 import static hello.AllInShop.domain.Gender.남성;
 

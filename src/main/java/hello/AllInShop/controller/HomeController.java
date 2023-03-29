@@ -2,6 +2,7 @@ package hello.AllInShop.controller;
 
 import hello.AllInShop.dto.AuthMemberDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class HomeController {
 
     //로그인한 사용자
     @GetMapping("/member")
+    @PreAuthorize("hasRole('USER')")
     public void member(@AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         log.info("Member....................");
 

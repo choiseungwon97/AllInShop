@@ -1,4 +1,4 @@
-package hello.AllInShop.service;
+package hello.AllInShop.service.security;
 
 import hello.AllInShop.domain.Grade;
 import hello.AllInShop.domain.Member;
@@ -51,7 +51,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 
         authMember.setNickname(member.getNickname());
-        authMember.setFormSocial(member.isFromSocial());
+        authMember.setFromSocial(member.isFromSocial());
         return authMember;
     }
 }
