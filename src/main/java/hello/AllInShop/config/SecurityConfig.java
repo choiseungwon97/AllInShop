@@ -42,10 +42,10 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests((auth) -> {
+        /*http.authorizeHttpRequests((auth) -> {
             auth.antMatchers("/home/all").permitAll();
             auth.antMatchers("/home/member").hasRole("USER");
-        });
+        });*/
 
         http.formLogin(); //인증,인가 문제시 에러화면이 아닌 로그인 화면으로 이동하게 해주는 로직
         http.csrf().disable();

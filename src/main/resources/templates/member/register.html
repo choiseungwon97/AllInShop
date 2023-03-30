@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout/basic :: setContent(~{this::content} )}">
+    <th:block th:fragment="content">
+
+        <style>
+            .field-error {
+                border-color: #dc3545;
+                color: #dc3545;
+            }
+        </style>
+        <h1 class="mt-4">회원 가입</h1>
+
+        <form action="#" th:action="@{/member/register}" th:object="${dto}" th:method="post">
+            <div class="form-group">
+                <label>이메일</label>
+                <input type="email" class="form-control" th:field="*{email}" th:errorclass="field-error">
+                <div class="field-error" th:errors="*{email}">
+                    이메일 오류
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>닉네임</label>
+                <input type="text" class="form-control" th:field="*{nickname}" th:errorclass="field-error">
+                <div class="field-error" th:errors="*{nickname}">
+                    닉네임 오류
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>비밀번호(최소 4글자 이상으로 작성해야합니다.)</label>
+                <input type="password" class="form-control" th:field="*{password}" th:errorclass="field-error">
+                <div class="field-error" th:errors="*{password}">
+                    비밀번호 오류
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>비밀번호 확인</label>
+                <input type="password"  class="form-control" id="password2" >
+            </div>
+
+            <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+            <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+
+            <div class="form-group">
+                <label>우편번호</label>
+                <input type="text" class="form-control" th:field="*{zipcode}" th:errorclass="field-error">
+                <div class="field-error" th:errors="*{zipcode}">
+                    우편번호 오류
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>도시</label>
+                <input type="text" class="form-control" th:field="*{city}" th:errorclass="field-error">
+               <div class="field-error" th:errors="*{city}">
+                    도시 오류
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>나머지 주소</label>
+                <input type="text" class="form-control" th:field="*{street}" th:errorclass="field-error">
+                <div class="field-error" th:errors="*{street}">
+                    나머지 주소 오류
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" >등록</button>
+        </form>
+
+        <script>
+
+            $(document).ready(function (e) {
+                $(".btn-primary").on("click", function (e) {
+                    e.preventDefault();
+
+                    $("form").submit();
+                });
+            });
+
+            //비밀번호 확인 유효성 검사
+            $(function () {
+                $("#alert-success").hide();
+                $("#alert-danger").hide();
+                $("input").keyup(function () {
+                    var pwd1 = $("#password").val();
+                    var pwd2 = $("#password2").val();
+                    if(pwd1 != "" || pwd2 != "") {
+                        if(pwd1 == pwd2 ) {
+                            $("#alert-success").show();
+                            $("#alert-danger").hide();
+                            $(".btn-primary").removeAttr("disabled");
+                        } else {
+                            $("#alert-success").hide();
+                            $("#alert-danger").show();
+                            $(".btn-primary").attr("disabled", "disabled");
+                        }
+                    }
+                });
+            });
+        </script>
+
+    </th:block>
+</th:block>
+</html>
