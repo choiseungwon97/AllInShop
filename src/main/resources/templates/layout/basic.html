@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="setContent(content)">
     <head>
 
@@ -62,6 +62,16 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+                        <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+                        <div sec:authorize="isAuthenticated()">
+                            <!--<div th:value="${authDto.nickname}"></div>-->
+                            <div sec:authentication="name"></div>
+
+                        </div>
+
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>

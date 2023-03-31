@@ -10,7 +10,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 public class Delivery extends BaseEntity{
 
     @Id
@@ -25,6 +25,6 @@ public class Delivery extends BaseEntity{
     private Address address;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private DeliveryStatus status;
 
 }

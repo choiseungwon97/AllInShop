@@ -1,6 +1,7 @@
 package hello.AllInShop.domain;
 
 
+import hello.AllInShop.exception.NotEnoughStockException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -113,5 +114,19 @@ public class Product extends BaseEntity{
         brand.getProducts().add(this);
     }
 
+    //==비즈니스 로직==
+    //주문 취소시 재고 더하기
+    public void addStock(int quantity) {
+        this.stock += quantity;
+    }
+
+    //주문 시 재고 빼기
+    public void removeStock(int quantity) {
+        int restStock = this.stock - quantity;
+        if (restStock < 0) {
+            throw new NotEnoughStockException("재고가 부족합니다.");
+        }
+        this.stock = restStock;
+    }
 
 }

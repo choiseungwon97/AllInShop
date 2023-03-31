@@ -1,5 +1,6 @@
 package hello.AllInShop.controller;
 
+import hello.AllInShop.dto.AuthMemberDTO;
 import hello.AllInShop.dto.PageRequestDTO;
 import hello.AllInShop.dto.ProductDTO;
 import hello.AllInShop.repository.BrandRepository;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +34,12 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model, @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
 
         log.info("list===================" + pageRequestDTO);
-
+        log.info("authDto================" + authMemberDTO);
         model.addAttribute("result", productService.getList(pageRequestDTO));
+        model.addAttribute("authDto", authMemberDTO);
     }
 
     @GetMapping("/register")
