@@ -19,6 +19,8 @@ import java.util.Map;
 @ToString
 public class AuthMemberDTO extends User implements OAuth2User {
 
+    private Long id;
+
     private String email;
 
     private String password;
@@ -31,15 +33,16 @@ public class AuthMemberDTO extends User implements OAuth2User {
 
     //소셜로그인용
     //OAuth2User는 Map 타입으로 모든 인증 결과를 atttibutes라는 이름으로 갖고 있기 때문이다.
-    public AuthMemberDTO(String username, String password, boolean fromSocial,
+    public AuthMemberDTO(Long id, String username, String password, boolean fromSocial,
                              Collection<? extends GrantedAuthority> authorities, Map<String, Object> attr) {
-        this(username,password, fromSocial, authorities);
+        this(id, username,password, fromSocial, authorities);
         this.attr = attr;
     }
 
     //기존로그인
-    public AuthMemberDTO(String username, String password, boolean fromSocial, Collection<? extends GrantedAuthority> authorities) {
+    public AuthMemberDTO(Long id, String username, String password, boolean fromSocial, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
+        this.id = id;
         this.email = username;
         this.password = password;
         this.fromSocial = fromSocial;

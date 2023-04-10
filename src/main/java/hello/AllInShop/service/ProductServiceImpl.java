@@ -144,9 +144,10 @@ public class ProductServiceImpl implements ProductService{
             productRepository.save(entity);
         }
 
-        productImageList.forEach(productImage -> {
-            productImgRepository.save(productImage);
-        });
+            productImageList.forEach(productImage -> {
+                productImgRepository.save(productImage);
+            });
+
     }
 
     private BooleanBuilder getSearch(PageRequestDTO requestDTO) {

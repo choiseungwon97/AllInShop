@@ -58,6 +58,7 @@ public class OAuth2UserDetailsService extends DefaultOAuth2UserService {
         Member member = saveSocialMember(email);
 
         AuthMemberDTO authMemberDTO = new AuthMemberDTO(
+                member.getId(),
                 member.getEmail(),
                 member.getPassword(),
                 true,

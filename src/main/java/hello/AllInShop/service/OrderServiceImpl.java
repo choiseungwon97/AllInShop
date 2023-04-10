@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService{
      * 주문
      */
     @Override
-    public Long register(Long memberId, Long productId, int count) {
+    public Long register(Long memberId, Long productId, int count,  String city, String street, int zipcode) {
 
 
         //엔티티 조회
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService{
 
         //배송정보 생성
         Delivery delivery = new Delivery();
-        delivery.setAddress(member.get().getAddress());
+        delivery.setAddress(new Address(city, street, zipcode));
         delivery.setStatus(DeliveryStatus.READY);
 
         //주문상품 생성
@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService{
         //주문 생성
         Order order = Order.createOrder(member.get(), delivery, orderProduct);
 
-        //주문 저장
+               //주문 저장
         orderRepository.save(order);
         return order.getId();
     }
