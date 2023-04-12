@@ -1,9 +1,6 @@
 package hello.AllInShop.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,6 +13,8 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter @Setter
 @Table(name = "orders")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString(of = {"id","status"})
 public class Order extends BaseEntity{
 

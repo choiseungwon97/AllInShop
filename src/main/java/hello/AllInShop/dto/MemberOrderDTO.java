@@ -1,10 +1,8 @@
 package hello.AllInShop.dto;
 
+import hello.AllInShop.domain.DeliveryStatus;
 import hello.AllInShop.domain.OrderStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,22 +10,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class OrderDTO {
+@ToString
+public class MemberOrderDTO {
 
-    //order entity
+    private String nickname;
     private Long orderId;
-
     private LocalDateTime orderDate;
-
     private OrderStatus orderStatus;
+    private int count;
+    private String productName;
+    private DeliveryStatus deliveryStatus;
 
-    //delivery entity
-    private Long deliveryId;
-
-
-
-
-    //orderProduce entity
-
-    //member entity
 }

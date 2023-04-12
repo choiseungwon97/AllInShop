@@ -1,6 +1,8 @@
 package hello.AllInShop.repository;
 
 import hello.AllInShop.domain.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +23,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, QuerydslP
     @Query("select m from Member m where m.fromSocial =:social and m.email =:email")
     Optional<Member> findByEmail(@Param("email") String email, @Param("social") boolean social);
 
+
+
 }
+

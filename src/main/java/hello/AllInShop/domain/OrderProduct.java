@@ -1,8 +1,6 @@
 package hello.AllInShop.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +11,9 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "order_product")
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor
+@Builder
+@ToString(exclude = {"products", "orders"})
 public class OrderProduct extends BaseEntity{
 
     @Id
