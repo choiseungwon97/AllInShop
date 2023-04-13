@@ -10,10 +10,11 @@
             <thead>
             <tr>
                 <th scope="col">상품명</th>
-                <th scope="col">주문상태</th>
-                <th scope="col">주문날짜</th>
                 <th scope="col">주문갯수</th>
+                <th scope="col">주문날짜</th>
                 <th scope="col">배달상태</th>
+                <th scope="col">주문상태</th>
+                <th scope="col">주문취소</th>
             </tr>
             </thead>
             <tbody>
@@ -21,11 +22,13 @@
                 <th scope="row">
                         [[${dto.productName}]]
                     </th>
-                <td>[[${dto.orderStatus}]]</td>
-                <td>[[${#temporals.format(dto.orderDate, 'yyyy/MM/dd')}]]</td>
                 <td>[[${dto.count}]]</td>
+                <td>[[${#temporals.format(dto.orderDate, 'yyyy/MM/dd')}]]</td>
+                <td>[[${dto.orderStatus}]]</td>
                 <td>[[${dto.deliveryStatus}]]</td>
-
+                <td><a th:if="${dto.orderStatus.name() == 'ORDER'}"
+                       href="#" th:href="'javascript:cancel('+${dto.orderId}+')'"
+                       class="btn btn-danger">주문취소</a> </td>
             </tr>
             </tbody>
 
@@ -48,44 +51,14 @@
             </li>
         </ul>
 
-        <div class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">알림</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>작업완료 되었습니다.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">확인</button>
-                        <button type="button" class="btn btn-primary">변경하기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <script th:inline="javascript">
-            var msg = [[${msg}]]
-            console.log(msg);
-
-            if(msg){
-                $(".modal").modal();
+            function cancel(orderId) {
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/member/myPage/orders/"+orderId+"/cancel")
+                document.body.appendChild(form);
+                form.submit();
             }
-
-            var searchForm = $("#searchForm");
-
-            $('.btn-search').click(function (e){
-                searchForm.submit();
-            });
-
-            $('.btn-clear').click(function (e){
-                searchForm.empty().submit();
-            });
-
         </script>
 
     </th:block>

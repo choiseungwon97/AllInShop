@@ -14,10 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
@@ -81,7 +78,17 @@ public class MemberController {
 
 
         return "/member/myPage";
+    }
 
+    /**
+     * 주문 취소
+     */
+    @PostMapping("/myPage/orders/{orderId}/cancel")
+    public String cancelOrder(@PathVariable("orderId") Long orderId) {
+
+        orderService.cancelOrder(orderId);
+
+        return "redirect:/member/myPage";
     }
 
 }
