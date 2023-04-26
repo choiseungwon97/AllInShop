@@ -16,9 +16,10 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-.properties
 
 ### IntelliJ IDEA ###
+application.properties
+
 .idea
 *.iws
 *.iml
